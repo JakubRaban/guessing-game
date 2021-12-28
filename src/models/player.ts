@@ -1,19 +1,17 @@
-import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../app'
-import { Game } from './game'
+import { DataTypes, Model, Sequelize } from 'sequelize'
 
-export class Player extends Model {}
+class Player extends Model {}
 
-Player.init(
-  {
-    name: { type: DataTypes.STRING(12), allowNull: false },
-    assignedPuzzle: { type: DataTypes.STRING(64) },
-    puzzleInfoPage: { type: DataTypes.STRING, validate: { isUrl: true } },
-  },
-  {
-    sequelize,
-  }
-)
-
-Player.belongsTo(Game)
-Player.belongsTo(Player, { as: 'assignedByPlayer' })
+export default (sequelize: Sequelize) => {
+  Player.init(
+    {
+      name: { type: DataTypes.STRING(12), allowNull: false },
+      assignedPuzzle: { type: DataTypes.STRING(64) },
+      puzzleInfoPage: { type: DataTypes.STRING, validate: { isUrl: true } },
+    },
+    {
+      sequelize,
+    }
+  )
+  return Player
+}

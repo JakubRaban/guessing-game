@@ -15,7 +15,8 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "sequelize": "^7.0.0-alpha.2"
+    "sequelize": "^7.0.0-alpha.2",
+    "socket.io": "^4.4.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

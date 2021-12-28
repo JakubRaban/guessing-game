@@ -4,7 +4,7 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import cors from 'cors'
-import { Sequelize } from 'sequelize'
+import sequelize from './models/index'
 
 import indexRouter from './routes'
 
@@ -35,11 +35,8 @@ app.use((err: any, req: Request, res: Response) => {
   res.send()
 })
 
-// Setup sequelize ORM
-export const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: '../database.sqlite',
+sequelize.authenticate().then(() => {
+  sequelize.sync().then(() => console.log('DB ready'))
 })
-sequelize.authenticate().then(() => console.log('Database connected'))
 
 export default app
