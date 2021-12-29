@@ -7,6 +7,8 @@
 import app from '../app'
 import d from 'debug'
 import http from 'http'
+import { Server } from 'socket.io'
+import onConnection from '../socket-events'
 
 const debug = d('server:server')
 
@@ -56,7 +58,7 @@ const onError = (error: any) => {
  * Event listener for HTTP server "listening" event.
  */
 const onListening = () => {
-  const addr = server.address()
+  const addr = httpServer.address()
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
   debug('Listening on ' + bind)
 }
@@ -69,15 +71,18 @@ const port = normalizePort(process.env.PORT || '9000')
 app.set('port', port)
 
 /**
- * Create HTTP server.
+ * Create HTTP server and socket.io server
  */
 
-const server = http.createServer(app)
+const httpServer = http.createServer(app)
+const io = new Server(httpServer)
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port)
-server.on('error', onError)
-server.on('listening', onListening)
+httpServer.listen(port)
+httpServer.on('error', onError)
+httpServer.on('listening', onListening)
+
+io.on('connection', onConnection(io))

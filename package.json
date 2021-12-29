@@ -19,6 +19,7 @@
     "socket.io": "^4.4.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.36",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/debug": "^4.1.7",

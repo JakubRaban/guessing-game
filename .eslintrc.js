@@ -22,6 +22,12 @@ module.exports = {
         semi: false,
       },
     ],
+    '@typescript-eslint/ban-ts-comment': [
+      1,
+      {
+        'ts-ignore': false,
+      },
+    ],
     ...prettierConfig.rules,
   },
 }
