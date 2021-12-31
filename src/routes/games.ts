@@ -8,15 +8,17 @@ router.post('/', async (req, res) => {
   const game = await Game.create()
   // @ts-ignore
   const options = await game.createGameOption(req.body)
-  res.send({ game, options })
+  const gameInstance = game.get()
+  gameInstance.GameOption = options.get()
+  res.send(gameInstance)
 })
 
 router.get('/:id', (req, res) => {
-  return Game.findOne({
+  Game.findOne({
     where: { urlId: req.params.id },
-    include: [{ model: GameOptions, as: 'options' }],
+    include: [{ model: GameOptions }],
   }).then((game) => {
-    res.send(game)
+    res.send(game.get())
   })
 })
 

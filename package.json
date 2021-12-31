@@ -2,7 +2,7 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/bin/www.js",
+  "main": "dist/src/bin/www.js",
   "scripts": {
     "start": "tsc && node .",
     "build": "tsc",

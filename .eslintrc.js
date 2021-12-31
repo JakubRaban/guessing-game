@@ -13,6 +13,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint', 'prettier'],
+  ignorePatterns: ['client/*'],
   rules: {
     'prettier/prettier': [
       1,

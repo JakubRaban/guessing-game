@@ -5,9 +5,13 @@ class Player extends Model {}
 export default (sequelize: Sequelize) => {
   Player.init(
     {
-      name: { type: DataTypes.STRING(12), allowNull: false },
+      name: { type: DataTypes.STRING(12) },
+      socketId: { type: DataTypes.STRING(20), allowNull: false },
       assignedPuzzle: { type: DataTypes.STRING(64) },
-      puzzleInfoPage: { type: DataTypes.STRING, validate: { isUrl: true } },
+      puzzleInfoPage: {
+        type: DataTypes.STRING(128),
+        validate: { isUrl: true },
+      },
     },
     {
       sequelize,

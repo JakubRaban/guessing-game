@@ -8,6 +8,7 @@ export default (sequelize: Sequelize) => {
     {
       urlId: {
         type: DataTypes.STRING(12),
+        primaryKey: true,
         allowNull: false,
         defaultValue: generateGameId,
       },
@@ -19,7 +20,6 @@ export default (sequelize: Sequelize) => {
     },
     {
       sequelize,
-      indexes: [{ unique: true, fields: ['urlId'] }],
     }
   )
 

@@ -75,7 +75,7 @@ app.set('port', port)
  */
 
 const httpServer = http.createServer(app)
-const io = new Server(httpServer)
+const io = new Server(httpServer, { cors: { origin: 'http://localhost:3000' } })
 
 /**
  * Listen on provided port, on all network interfaces.
