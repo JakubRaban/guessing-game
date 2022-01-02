@@ -1,8 +1,8 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {useLocation, useParams} from "react-router";
-import {Game as GameType} from "../../types/Game";
-import {fetchJson} from "../../helpers";
-import {GameLobby} from "../GameLobby/GameLobby";
+import {Game as GameType} from "../../../types/game";
+import {fetchJson} from "../../../helpers";
+import {Game} from "../Game";
 
 export const GameEntrypoint: FunctionComponent = () => {
   const { gameId } = useParams()
@@ -10,8 +10,7 @@ export const GameEntrypoint: FunctionComponent = () => {
   const location = useLocation()
 
   useEffect(() => {
-    // @ts-ignore
-    const passedNewGame = location.state?.game as GameType
+    const passedNewGame = (location.state as { game?: GameType })?.game
     if (passedNewGame) {
       // Game was passed from the "NewGame" component
       setGame(passedNewGame)
@@ -26,15 +25,12 @@ export const GameEntrypoint: FunctionComponent = () => {
     return <p>Loading game...</p>
   }
 
-  if (game.status === 'playing') {
-    return <p>This game is already in progress</p>
+  switch (game.status) {
+    case "lobby":
+      return <Game game={game} />
+    case "playing":
+      return <p>This game is already in progress</p>
+    case "finished":
+      return <p>This game has already been finished</p>
   }
-
-  if (game.status === 'finished') {
-    return <p>This game has already been finished</p>
-  }
-
-  return (
-    <GameLobby game={game} />
-  )
 }

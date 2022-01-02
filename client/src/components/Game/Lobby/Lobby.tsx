@@ -1,22 +1,16 @@
 import React, {FunctionComponent, useContext, useEffect, useState} from "react";
-import {Game, Player} from '../../types/Game'
-import {SocketIOContext} from "../../contexts/SocketIOContext";
-import {SERVER_SENT_EVENTS, CLIENT_SENT_EVENTS} from "../../events/event-types";
-import {PlayerNameForm} from "../PlayerNameForm/PlayerNameForm";
-import {PlayersList} from "../PlayersList/PlayersList";
+import {Game, Player} from '../../../types/game'
+import {SocketIOContext} from "../../../contexts/SocketIOContext";
+import {SERVER_SENT_EVENTS, CLIENT_SENT_EVENTS} from "../../../events/socket-event-types";
+import {PlayerNameForm} from "./PlayerNameForm/PlayerNameForm";
+import {PlayersList} from "./PlayersList/PlayersList";
 
-export const GameLobby: FunctionComponent<{ game: Game }> = ({ game }) => {
+export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
   const { socket } = useContext(SocketIOContext)
   const [players, setPlayers] = useState<Player[] | null>(null)
   const currentPlayer = players?.find((player) => player.socketId === socket.id)
+  const allPlayersHaveChosenName = players?.every((player) => !!player.name)
   const [gameJoiningError, setGameJoiningError] = useState<string | null>(null)
-
-  useEffect(() => {
-    socket.connect()
-    return () => {
-      socket.disconnect()
-    }
-  }, [])
 
   useEffect(() => {
     socket.on(SERVER_SENT_EVENTS.PLAYER_LIST_UPDATED, setPlayers)
@@ -27,6 +21,10 @@ export const GameLobby: FunctionComponent<{ game: Game }> = ({ game }) => {
 
   const handleNameConfirmed = (name: string) => {
     socket.emit(CLIENT_SENT_EVENTS.SET_NAME, { name })
+  }
+
+  const handleStartGame = () => {
+    socket.emit(CLIENT_SENT_EVENTS.START_GAME)
   }
 
   if (gameJoiningError) {
@@ -40,7 +38,18 @@ export const GameLobby: FunctionComponent<{ game: Game }> = ({ game }) => {
   return (
     <>
       <p>Invite your friends to the game by sending them this link: {window.location.href}</p>
-      <PlayersList players={players} limit={game.GameOption.maxPlayers} />
+      <PlayersList
+        players={players}
+        limit={game.GameOption.maxPlayers}
+        currentPlayer={currentPlayer} />
+      <button
+        disabled={!allPlayersHaveChosenName || players.length < 2}
+        onClick={handleStartGame}
+      >
+        Start the game
+      </button>
+      {!allPlayersHaveChosenName && <p>Let's wait for all players to choose their name</p>}
+      {players.length < 2 && <p>Invite your friends to start the game</p>}
     </>
   )
 }

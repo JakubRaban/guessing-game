@@ -12,6 +12,15 @@ export interface Game {
 }
 
 export interface Player {
+  id: number
   name?: string
-  socketId?: string
+  socketId: string
+}
+
+export type Vote = 'yes' | 'no' | '?'
+
+export type PuzzledPlayer = Player & {
+  assignedPuzzle?: string
+  puzzleInfoPage?: string
+  lastVote?: Vote
 }

@@ -7,6 +7,7 @@ export default (sequelize: Sequelize) => {
     {
       name: { type: DataTypes.STRING(12) },
       socketId: { type: DataTypes.STRING(20), allowNull: false },
+      orderOfPlaying: { type: DataTypes.INTEGER },
       assignedPuzzle: { type: DataTypes.STRING(64) },
       puzzleInfoPage: {
         type: DataTypes.STRING(128),

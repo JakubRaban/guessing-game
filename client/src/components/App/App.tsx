@@ -2,7 +2,7 @@ import React, {FunctionComponent} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {LandingPage} from "../LandingPage/LandingPage";
 import {NewGame} from "../NewGame/NewGame";
-import {GameEntrypoint} from "../GameEntrypoint/GameEntrypoint";
+import {GameEntrypoint} from "../Game/GameEntrypoint/GameEntrypoint";
 import {SocketIOContext} from "../../contexts/SocketIOContext";
 import {io} from "socket.io-client";
 
