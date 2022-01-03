@@ -26,6 +26,21 @@ const gameStateReducer = (state: GameState, event: GameStateEvent): GameState =>
         players: state.players.map((player) =>
           player.socketId === event.payload.playerId ? { ...player, lastVote: event.payload.vote } : player)
       }
+    case 'puzzleAssigned':
+      return {
+        ...state,
+        players: state.players.map((player) =>
+          player.socketId === event.payload.socketId ? { ...player, ...event.payload }: player)
+      }
+    case 'puzzleSelfAssigned':
+      return {
+        ...state,
+        players: state.players.map((player) =>
+          player.socketId === event.payload.socketId
+            ? { ...player, assignedPuzzle: '_', puzzleInfoPage: '_' }
+            : player
+        )
+      }
   }
 }
 
@@ -36,6 +51,13 @@ export const Gameplay: FunctionComponent = () => {
   useEffect(() => {
     socket.on(SERVER_SENT_EVENTS.GAME_START_PLAYERS_ORDERED, (players) => {
       modifyGameState({ type: 'gameStartPlayersOrdered', payload: { players }})
+    })
+    socket.on(SERVER_SENT_EVENTS.PUZZLE_ASSIGNED, (payload) => {
+      console.log(payload)
+      modifyGameState({ type: 'puzzleAssigned', payload })
+    })
+    socket.on(SERVER_SENT_EVENTS.PUZZLE_SELF_ASSIGNED, () => {
+      modifyGameState({ type: 'puzzleSelfAssigned', payload: { socketId: socket.id } })
     })
 
     socket.emit(CLIENT_SENT_EVENTS.GAME_START_GET_ORDERED_PLAYERS)

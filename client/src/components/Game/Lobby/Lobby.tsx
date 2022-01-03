@@ -4,11 +4,12 @@ import {SocketIOContext} from "../../../contexts/SocketIOContext";
 import {SERVER_SENT_EVENTS, CLIENT_SENT_EVENTS} from "../../../events/socket-event-types";
 import {PlayerNameForm} from "./PlayerNameForm/PlayerNameForm";
 import {PlayersList} from "./PlayersList/PlayersList";
+import {useCurrentPlayer} from "../../../hooks/use-current-player";
 
 export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
   const { socket } = useContext(SocketIOContext)
   const [players, setPlayers] = useState<Player[] | null>(null)
-  const currentPlayer = players?.find((player) => player.socketId === socket.id)
+  const currentPlayer = useCurrentPlayer(players || [])
   const allPlayersHaveChosenName = players?.every((player) => !!player.name)
   const [gameJoiningError, setGameJoiningError] = useState<string | null>(null)
 
@@ -31,7 +32,7 @@ export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
     return <p>Could not join this game: {gameJoiningError}</p>
   }
 
-  if (players === null || currentPlayer!.name === null) {
+  if (players === null || currentPlayer.name === null) {
     return <PlayerNameForm onConfirm={handleNameConfirmed} />
   }
 
@@ -41,7 +42,7 @@ export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
       <PlayersList
         players={players}
         limit={game.GameOption.maxPlayers}
-        currentPlayer={currentPlayer} />
+      />
       <button
         disabled={!allPlayersHaveChosenName || players.length < 2}
         onClick={handleStartGame}

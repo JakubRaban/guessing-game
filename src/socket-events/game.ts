@@ -5,6 +5,7 @@ import {
 } from '../../client/src/events/socket-event-types'
 import sequelize from '../models'
 import {
+  AssignPuzzleEventPayload,
   JoinLeaveGameEventPayload,
   SetNameEventPayload,
 } from '../../client/src/types/event-payloads'
@@ -86,6 +87,36 @@ export default (io: Server, socket: Socket) => {
     )
   }
 
+  const assignPuzzle = async ({
+    assignedPuzzle,
+    puzzleInfoPage,
+  }: AssignPuzzleEventPayload) => {
+    console.log('assignPuzzle')
+    const players = await Player.findAll({
+      where: { GameUrlId: socket.data.gameId },
+      order: ['orderOfPlaying'],
+    })
+    const assigningPlayerIndex = players.findIndex(
+      (player) => player.get().socketId === socket.id
+    )
+    const playerBeingAssigned =
+      players[(assigningPlayerIndex + 1) % players.length].get()
+    await Player.update(
+      { assignedPuzzle, puzzleInfoPage },
+      { where: { id: playerBeingAssigned.id } }
+    )
+    io.to(socket.data.gameId)
+      .except(playerBeingAssigned.socketId)
+      .emit(SERVER_SENT_EVENTS.PUZZLE_ASSIGNED, {
+        socketId: playerBeingAssigned.socketId,
+        assignedPuzzle,
+        puzzleInfoPage,
+      })
+    io.to(playerBeingAssigned.socketId).emit(
+      SERVER_SENT_EVENTS.PUZZLE_SELF_ASSIGNED
+    )
+  }
+
   const disconnect = async () => {
     /* TODO this behavior should be correct for 'lobby' game status. For other ones:
      *   - nothing should happen on 'finished' status
@@ -109,5 +140,6 @@ export default (io: Server, socket: Socket) => {
     CLIENT_SENT_EVENTS.GAME_START_GET_ORDERED_PLAYERS,
     getOrderedPlayers
   )
+  socket.on(CLIENT_SENT_EVENTS.ASSIGN_PUZZLE, assignPuzzle)
   socket.on('disconnect', disconnect)
 }

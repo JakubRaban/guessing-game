@@ -38,8 +38,26 @@ export interface VoteReceivedEvent {
   }
 }
 
+export interface PuzzleAssigned {
+  type: 'puzzleAssigned',
+  payload: {
+    socketId: string
+    assignedPuzzle: string
+    puzzleInfoPage: string
+  }
+}
+
+export interface PuzzleSelfAssigned {
+  type: 'puzzleSelfAssigned',
+  payload: {
+    socketId: string
+  }
+}
+
 export type GameStateEvent =
   GameStartPlayersOrderedEvent
   | QuestionAskedEvent
   | AnswerGivenEvent
   | VoteReceivedEvent
+  | PuzzleAssigned
+  | PuzzleSelfAssigned

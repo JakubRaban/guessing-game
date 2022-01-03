@@ -5,3 +5,8 @@ export interface JoinLeaveGameEventPayload {
 export interface SetNameEventPayload {
   name: string
 }
+
+export interface AssignPuzzleEventPayload {
+  assignedPuzzle: string
+  puzzleInfoPage: string
+}
