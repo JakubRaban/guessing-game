@@ -1,6 +1,7 @@
 # Guessing game
 An implementation of a party game in which players stick post-its with a name of some character (real or not) on each other's foreheads and then take turns trying to guess who they are by asking simple yes/no questions.
 
+## Features
 The following features are expected to be implemented for an MVP:
 1. ✅ User creates a game with an unique URL which can be joined by other players by just pasting it to their address bar
 2. The creator of the game sets the settings of the game:
@@ -27,3 +28,17 @@ The following features are expected to be implemented for an MVP:
 13. The game continues until the condition for finishing the game selected during its setup is met
 14. After the game is finished a summary screen is displayed. It shows players with their characters and standings, including number of turns needed for them come to a guess
 15. As convenient, old games can be either removed automatically by a cron-like process or manually
+
+## Technologies
+### Frontend
+- [React](https://reactjs.org/) with [TypeScript](https://www.typescriptlang.org/)
+- [React Router v6](https://reactrouter.com/)
+- (planned) [SASS](https://sass-lang.com/)
+
+### Communication
+- [socket.io](https://socket.io/) - a communication platform making use of Websockets but providing nice additional features like rooms, disconnection detection etc.
+
+### Backend
+- [NodeJS](https://nodejs.org/en/) with [Express](https://expressjs.com/) and TypeScript
+- [Sequelize](https://sequelize.org/), a JS ORM framework
+- [SQLite](https://www.sqlite.org/index.html) database for testing to be replaced with a full-fledged solution (possibly Postgres) in production
