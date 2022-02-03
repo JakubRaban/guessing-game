@@ -4,7 +4,7 @@ export type TurnType = 'question' | 'answer'
 
 export interface GameState {
   players: PuzzledPlayer[]
-  currentPlayerIndex: number
+  currentTurnPlayerIndex: number
   currentTurnText?: string
   currentTurnType?: TurnType
 }
@@ -30,14 +30,6 @@ export interface AnswerGivenEvent {
   }
 }
 
-export interface VoteReceivedEvent {
-  type: 'voteReceived'
-  payload: {
-    playerId: string
-    vote: Vote
-  }
-}
-
 export interface PuzzleAssigned {
   type: 'puzzleAssigned',
   payload: {
@@ -54,10 +46,27 @@ export interface PuzzleSelfAssigned {
   }
 }
 
+export interface TurnTakenEvent {
+  type: 'turnTakenEvent',
+  payload: {
+    turnType: TurnType
+    text: string
+  }
+}
+
+export interface VoteCastEvent {
+  type: 'voteCast'
+  payload: {
+    playerId: string
+    vote: Vote
+  }
+}
+
 export type GameStateEvent =
   GameStartPlayersOrderedEvent
   | QuestionAskedEvent
   | AnswerGivenEvent
-  | VoteReceivedEvent
+  | VoteCastEvent
   | PuzzleAssigned
   | PuzzleSelfAssigned
+  | TurnTakenEvent

@@ -1,15 +1,14 @@
-import React, {FunctionComponent, useContext, useEffect, useState} from "react";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import {Game, Player} from '../../../types/game'
-import {SocketIOContext} from "../../../contexts/SocketIOContext";
 import {SERVER_SENT_EVENTS, CLIENT_SENT_EVENTS} from "../../../events/socket-event-types";
 import {PlayerNameForm} from "./PlayerNameForm/PlayerNameForm";
-import {PlayersList} from "./PlayersList/PlayersList";
-import {useCurrentPlayer} from "../../../hooks/use-current-player";
+import {LobbyPlayersList} from "./PlayersList/LobbyPlayersList";
+import {useSocket} from "../../../hooks/useSocket";
 
 export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
-  const { socket } = useContext(SocketIOContext)
+  const { socket } = useSocket()
   const [players, setPlayers] = useState<Player[] | null>(null)
-  const currentPlayer = useCurrentPlayer(players || [])
+  const currentPlayer = players?.find(player => player.socketId === socket.id)!
   const allPlayersHaveChosenName = players?.every((player) => !!player.name)
   const [gameJoiningError, setGameJoiningError] = useState<string | null>(null)
 
@@ -39,8 +38,9 @@ export const Lobby: FunctionComponent<{ game: Game }> = ({ game }) => {
   return (
     <>
       <p>Invite your friends to the game by sending them this link: {window.location.href}</p>
-      <PlayersList
+      <LobbyPlayersList
         players={players}
+        currentPlayer={currentPlayer}
         limit={game.GameOption.maxPlayers}
       />
       <button

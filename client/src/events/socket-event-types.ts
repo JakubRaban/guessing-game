@@ -4,6 +4,8 @@ export const CLIENT_SENT_EVENTS = {
   START_GAME: 'start game',
   GAME_START_GET_ORDERED_PLAYERS: 'get ordered players',
   ASSIGN_PUZZLE: 'assign puzzle',
+  TAKE_TURN: 'take turn',
+  CAST_VOTE: 'cast vote',
 }
 
 export const SERVER_SENT_EVENTS = {
@@ -12,5 +14,7 @@ export const SERVER_SENT_EVENTS = {
   GAME_STARTED: 'game started',
   GAME_START_PLAYERS_ORDERED: 'players ordered',
   PUZZLE_ASSIGNED: 'puzzle assigned',
-  PUZZLE_SELF_ASSIGNED: 'puzzle self assigned'
+  PUZZLE_SELF_ASSIGNED: 'puzzle self assigned',
+  TURN_TAKEN: 'turn taken',
+  VOTE_CAST: 'vote cast'
 }

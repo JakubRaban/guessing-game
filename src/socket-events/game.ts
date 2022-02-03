@@ -6,12 +6,14 @@ import {
 import sequelize from '../models'
 import {
   AssignPuzzleEventPayload,
+  CastVoteEventPayload,
   JoinLeaveGameEventPayload,
   SetNameEventPayload,
+  TakeTurnEventPayload,
 } from '../../client/src/types/event-payloads'
 import { shuffleArray } from '../helpers'
 
-const { Game, GameOptions, Player } = sequelize.models
+const { Game, GameOptions, Player, Vote, Turn } = sequelize.models
 
 export default (io: Server, socket: Socket) => {
   const joinGame = async ({ gameId }: JoinLeaveGameEventPayload) => {
@@ -21,10 +23,10 @@ export default (io: Server, socket: Socket) => {
         where: { urlId: gameId },
         include: Player,
       })
-    ).get()
+    )?.get()
     const options = (
       await GameOptions.findOne({ where: { GameUrlId: game.urlId } })
-    ).get()
+    )?.get()
     if (game.Players.length === options.maxPlayers) {
       socket.emit(SERVER_SENT_EVENTS.ERROR_JOINING_GAME, {
         error: 'Player limit reached',
@@ -117,6 +119,61 @@ export default (io: Server, socket: Socket) => {
     )
   }
 
+  const takeTurn = async ({ turnType, text }: TakeTurnEventPayload) => {
+    console.log('take turn')
+    const player = (
+      await Player.findOne({ where: { socketId: socket.id } })
+    )?.get()
+    await Turn.create({ turnType, text, PlayerId: player.id })
+    io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TURN_TAKEN, {
+      turnType,
+      text,
+    })
+  }
+
+  const castVote = async ({ vote }: CastVoteEventPayload) => {
+    // Find the only turn in this game with no vote result
+    const currentTurn = await Turn.findOne({
+      include: [
+        {
+          model: Vote,
+        },
+        {
+          model: Player,
+          where: { GameUrlId: socket.data.gameId },
+        },
+      ],
+      where: {
+        voteResult: null,
+      },
+    })
+    const votingPlayer = await Player.findOne({
+      where: { socketId: socket.id },
+    })
+    // @ts-ignore
+    const votingPlayersExistingVote = currentTurn.Votes.find(
+      // @ts-ignore
+      (vote) => vote.PlayerId === votingPlayer.id
+    )
+    if (votingPlayersExistingVote) {
+      votingPlayersExistingVote.vote = vote
+      votingPlayersExistingVote.save()
+    } else {
+      await Vote.create({
+        vote,
+        // @ts-ignore
+        TurnId: currentTurn.id,
+        // @ts-ignore
+        PlayerId: votingPlayer.id,
+      })
+    }
+    io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.VOTE_CAST, {
+      // @ts-ignore
+      playerId: votingPlayer.socketId,
+      vote,
+    })
+  }
+
   const disconnect = async () => {
     /* TODO this behavior should be correct for 'lobby' game status. For other ones:
      *   - nothing should happen on 'finished' status
@@ -141,5 +198,7 @@ export default (io: Server, socket: Socket) => {
     getOrderedPlayers
   )
   socket.on(CLIENT_SENT_EVENTS.ASSIGN_PUZZLE, assignPuzzle)
+  socket.on(CLIENT_SENT_EVENTS.TAKE_TURN, takeTurn)
+  socket.on(CLIENT_SENT_EVENTS.CAST_VOTE, castVote)
   socket.on('disconnect', disconnect)
 }

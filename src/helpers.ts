@@ -1,10 +1,11 @@
 export const generateGameId = () => {
-  const alphabet = [...'bcdfghjklmnpqrstwvxz']
-  const randomElementFromList = () =>
-    alphabet[Math.floor(Math.random() * alphabet.length)]
+  const allowedLetters = 'bcdfghjklmnpqrstwvxz'
+  const allowedLettersArray = [...allowedLetters]
+  const getRandomAllowedLetter = () =>
+    allowedLettersArray[Math.floor(Math.random() * allowedLettersArray.length)]
 
   return [...Array(11)]
-    .map((e, i) => (i !== 3 && i !== 7 ? randomElementFromList() : '-'))
+    .map((e, i) => (i !== 3 && i !== 7 ? getRandomAllowedLetter() : '-'))
     .join('')
 }
 

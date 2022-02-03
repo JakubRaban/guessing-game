@@ -1,12 +1,12 @@
-import React, {FunctionComponent, useContext, useEffect, useState} from "react";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import { Game as GameType } from "../../types/game";
-import {SocketIOContext} from "../../contexts/SocketIOContext";
 import {Lobby} from "./Lobby/Lobby";
 import {SERVER_SENT_EVENTS} from "../../events/socket-event-types";
 import {Gameplay} from "./Gameplay/Gameplay";
+import {useSocket} from "../../hooks/useSocket";
 
 export const Game: FunctionComponent<{ game: GameType }> = ({ game: fetchedGame }) => {
-  const { socket } = useContext(SocketIOContext)
+  const { socket } = useSocket()
   const [game, setGame] = useState(fetchedGame)
 
   useEffect(() => {

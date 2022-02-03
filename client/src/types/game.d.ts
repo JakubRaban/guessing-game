@@ -17,7 +17,7 @@ export interface Player {
   socketId: string
 }
 
-export type Vote = 'yes' | 'no' | '?'
+export type Vote = 'yes' | 'no' | '?' | 'discuss'
 
 export type PuzzledPlayer = Player & {
   assignedPuzzle?: string
