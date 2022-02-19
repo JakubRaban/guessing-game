@@ -12,36 +12,21 @@ import {
   TakeTurnEventPayload,
 } from '../../client/src/types/event-payloads'
 import { shuffleArray } from '../helpers'
+import { joinGame } from '../services/game'
 
-const { Game, GameOptions, Player, Vote, Turn } = sequelize.models
+const { Game, Player, Vote, Turn } = sequelize.models
 
 export default (io: Server, socket: Socket) => {
-  const joinGame = async ({ gameId }: JoinLeaveGameEventPayload) => {
+  const joinGameController = async ({ gameId }: JoinLeaveGameEventPayload) => {
     console.log('joinGame')
-    const game = (
-      await Game.findOne({
-        where: { urlId: gameId },
-        include: Player,
-      })
-    )?.get()
-    const options = (
-      await GameOptions.findOne({ where: { GameUrlId: game.urlId } })
-    )?.get()
-    if (game.Players.length === options.maxPlayers) {
-      socket.emit(SERVER_SENT_EVENTS.ERROR_JOINING_GAME, {
-        error: 'Player limit reached',
-      })
-    } else if (game.status !== 'lobby') {
-      socket.emit(SERVER_SENT_EVENTS.ERROR_JOINING_GAME, {
-        error: 'This game is already in progress or finished',
-      })
+    const joinGameResult = await joinGame(gameId, socket.id)
+    const { game, error, allPlayers } = joinGameResult
+    if (error) {
+      socket.emit(SERVER_SENT_EVENTS.ERROR_JOINING_GAME, joinGameResult)
     } else {
       socket.data.gameId = game.urlId
-      await Player.create({ socketId: socket.id, GameUrlId: game.urlId })
-      Player.findAll({ where: { GameUrlId: game.urlId } }).then((players) => {
-        socket.join(game.urlId)
-        io.to(game.urlId).emit(SERVER_SENT_EVENTS.PLAYER_LIST_UPDATED, players)
-      })
+      socket.join(game.urlId)
+      io.to(game.urlId).emit(SERVER_SENT_EVENTS.PLAYER_LIST_UPDATED, allPlayers)
     }
   }
 
@@ -190,7 +175,7 @@ export default (io: Server, socket: Socket) => {
     )
   }
 
-  socket.on(CLIENT_SENT_EVENTS.JOIN_GAME, joinGame)
+  socket.on(CLIENT_SENT_EVENTS.JOIN_GAME, joinGameController)
   socket.on(CLIENT_SENT_EVENTS.SET_NAME, setName)
   socket.on(CLIENT_SENT_EVENTS.START_GAME, startGame)
   socket.on(
