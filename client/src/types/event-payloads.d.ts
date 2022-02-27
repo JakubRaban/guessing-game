@@ -1,5 +1,4 @@
-import {TurnType} from "./game-state";
-import {Vote} from "./game";
+import {PuzzleData, TurnData, Vote} from "./game";
 
 export interface JoinLeaveGameEventPayload {
   gameId: string
@@ -9,15 +8,9 @@ export interface SetNameEventPayload {
   name: string
 }
 
-export interface AssignPuzzleEventPayload {
-  assignedPuzzle: string
-  puzzleInfoPage: string
-}
+export type AssignPuzzleEventPayload = PuzzleData
 
-export interface TakeTurnEventPayload {
-  turnType: TurnType
-  text: string
-}
+export type TakeTurnEventPayload = TurnData
 
 export interface CastVoteEventPayload {
   vote: Vote
