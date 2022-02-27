@@ -1,3 +1,5 @@
+import {TurnType} from "./game-state";
+
 export type GameStatus = 'lobby' | 'playing' | 'finished'
 
 export interface GameOptions {
@@ -19,8 +21,16 @@ export interface Player {
 
 export type Vote = 'yes' | 'no' | '?' | 'discuss'
 
-export type PuzzledPlayer = Player & {
-  assignedPuzzle?: string
-  puzzleInfoPage?: string
+export interface PuzzleData {
+  assignedPuzzle: string
+  puzzleInfoPage: string
+}
+
+export type PuzzledPlayer = Player & Partial<PuzzleData> & {
   lastVote?: Vote
+}
+
+export interface TurnData {
+  turnType: TurnType
+  text: string
 }

@@ -8,7 +8,7 @@ import app from '../app'
 import d from 'debug'
 import http from 'http'
 import { Server } from 'socket.io'
-import onConnection from '../socket-events'
+import onConnection from '../controllers'
 
 const debug = d('server:server')
 
