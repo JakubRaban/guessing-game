@@ -2,13 +2,19 @@ import React, {FunctionComponent} from "react";
 import {InGamePlayersList} from "../Gameplay/IngamePlayersList/InGamePlayersList";
 import {CurrentTurnForm} from "./CurrentTurnForm/CurrentTurnForm";
 import {useTurn} from "../../../hooks/game-state";
-import {VotingPanel} from "../VotingPanel/VotingPanel";
-import {VotesList} from "../VotesList/VotesList";
+import {VotingPanel} from "./VotingPanel/VotingPanel";
+import {VotesList} from "./VotesList/VotesList";
+import {VotingResult} from "./VotingResult/VotingResult";
 
 import './MainScreen.scss'
 
 export const GameMainScreen: FunctionComponent = () => {
-  const { activePlayer, isLocalPlayerActive, isTurnTaken, turn } = useTurn()
+  const {
+    activePlayer,
+    isLocalPlayerActive,
+    isTurnTaken,
+    turn: { type: turnType, text: turnText, votingResult }
+  } = useTurn()
 
   const activePlayerYetToAct = isLocalPlayerActive && !isTurnTaken
   const activePlayerAwaitingVotes = isLocalPlayerActive && isTurnTaken
@@ -17,14 +23,13 @@ export const GameMainScreen: FunctionComponent = () => {
 
   return (
     <>
-      <InGamePlayersList  />
+      <InGamePlayersList />
       {activePlayerYetToAct && (
         <CurrentTurnForm />
       )}
       {activePlayerAwaitingVotes && (
         <>
-          {turn.type === 'answer' ? 'You tried to guess' : 'You asked'}: {turn.text}
-          <VotesList />
+          {turnType === 'answer' ? 'You tried to guess' : 'You asked'}: {turnText}
         </>
       )}
       {nonActivePlayerAwaitingAction && (
@@ -32,10 +37,15 @@ export const GameMainScreen: FunctionComponent = () => {
       )}
       {nonActivePlayerVoting && (
         <>
-          <p>{activePlayer.name} {turn.type === 'question' ? 'asks' : 'tries to guess'}:</p>
-          <p>{turn.type === 'answer' && 'Am I '}{turn.text}</p>
-          <VotingPanel />
+          <p>{activePlayer.name} {turnType === 'question' ? 'asks' : 'tries to guess'}:</p>
+          <p>{turnType === 'answer' && 'Am I '}{turnText}</p>
+          {!votingResult && <VotingPanel/>}
+        </>
+      )}
+      {isTurnTaken && (
+        <>
           <VotesList />
+          {votingResult && <VotingResult result={votingResult} />}
         </>
       )}
     </>

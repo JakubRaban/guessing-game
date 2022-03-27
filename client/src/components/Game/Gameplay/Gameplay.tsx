@@ -24,6 +24,12 @@ export const Gameplay: FunctionComponent = () => {
     socket.on(SERVER_SENT_EVENTS.VOTE_CAST, (payload) => {
       modifyGameState({ type: 'voteCast', payload })
     })
+    socket.on(SERVER_SENT_EVENTS.VOTING_COMPLETED, (payload) => {
+      modifyGameState({ type: 'votingCompleted', payload })
+    })
+    socket.on(SERVER_SENT_EVENTS.TENTATIVE_VOTE_RESULT_DETERMINED, (payload) => {
+      modifyGameState({ type: 'votingCompleted', payload }) // deliberately reusing same event type
+    })
 
     socket.emit(CLIENT_SENT_EVENTS.GAME_START_GET_ORDERED_PLAYERS, (players: PuzzledPlayer[]) => {
       modifyGameState({ type: 'gameStartPlayersOrdered', payload: { players } })

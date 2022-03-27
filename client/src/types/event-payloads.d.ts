@@ -1,4 +1,4 @@
-import {PuzzleData, TurnData, Vote} from "./game";
+import {PuzzleData, TurnData, Vote, YesNoVote} from "./game";
 
 export interface JoinLeaveGameEventPayload {
   gameId: string
@@ -14,4 +14,8 @@ export type TakeTurnEventPayload = TurnData
 
 export interface CastVoteEventPayload {
   vote: Vote
+}
+
+export interface DetermineTentativeVotingResultEvent {
+  votingResult: YesNoVote
 }

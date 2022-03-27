@@ -10,7 +10,7 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
       },
       text: { type: DataTypes.STRING(128), allowNull: false },
-      voteResult: { type: DataTypes.ENUM('yes', 'no', '?', 'discuss') },
+      votingResult: { type: DataTypes.ENUM('yes', 'no', '?', 'discuss') },
     },
     {
       sequelize,

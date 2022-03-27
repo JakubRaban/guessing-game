@@ -10,6 +10,12 @@ export const usePlayers = () => {
   return players
 }
 
+export const useVotingPlayers = () => {
+  const { activePlayer } = useTurn()
+  const { gameState: { players } } = useGameState()
+  return players.filter((player) => player !== activePlayer)
+}
+
 export const usePlayer = () => {
   const { socket } = useSocket()
   const players = usePlayers()
@@ -26,12 +32,17 @@ export const useAssignments = () => {
 
 export const useTurn = () => {
   const { socket } = useSocket()
-  const { gameState: { players, currentTurnPlayerIndex, currentTurnType, currentTurnText } } = useGameState()
+  const { gameState: { players, currentTurnPlayerIndex, currentTurnType, currentTurnText, votingResult } } = useGameState()
   return {
     activePlayer: players[currentTurnPlayerIndex],
     isLocalPlayerActive: players[currentTurnPlayerIndex].socketId === socket.id,
     isTurnTaken: !!currentTurnText,
-    turn: { text: currentTurnText, type: currentTurnType },
+    turn: {
+      text: currentTurnText,
+      type: currentTurnType,
+      votes: players.map((player: PuzzledPlayer) => player.lastVote),
+      votingResult: votingResult
+    },
   }
 }
 

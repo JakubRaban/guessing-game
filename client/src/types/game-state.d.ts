@@ -7,6 +7,7 @@ export interface GameState {
   currentTurnPlayerIndex: number
   currentTurnText?: string
   currentTurnType?: TurnType
+  votingResult?: Vote
 }
 
 export interface GameStartPlayersOrderedEvent {
@@ -62,6 +63,13 @@ export interface VoteCastEvent {
   }
 }
 
+export interface VotingCompletedEvent {
+  type: 'votingCompleted',
+  payload: {
+    votingResult: Vote
+  }
+}
+
 export type GameStateEvent =
   GameStartPlayersOrderedEvent
   | QuestionAskedEvent
@@ -70,3 +78,4 @@ export type GameStateEvent =
   | PuzzleAssigned
   | PuzzleSelfAssigned
   | TurnTakenEvent
+  | VotingCompletedEvent

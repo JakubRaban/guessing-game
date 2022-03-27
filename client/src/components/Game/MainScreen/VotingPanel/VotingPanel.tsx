@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from "react";
-import {useSocket} from "../../../hooks/useSocket";
-import {CLIENT_SENT_EVENTS} from "../../../events/socket-event-types";
+import { useSocket } from "../../../../hooks/useSocket";
+import { CLIENT_SENT_EVENTS } from "../../../../events/socket-event-types";
 
 export const voteToText = {
   yes: 'Yes',
@@ -24,10 +24,5 @@ export const VotingPanel: FunctionComponent = () => {
         <button key={value} type="button" value={value} onClick={handleVote}>{text}</button>
       ))}
     </form>
-    // <ul>
-    // {players.map((player) => (
-    // <li key={player.id}>{player.name} - {voteToText[player.lastVote || '']}</li>
-    // ))}
-    // </ul>
   )
 }

@@ -5,6 +5,7 @@ export const initialGameState: GameState = {
   currentTurnPlayerIndex: 0,
   currentTurnText: undefined,
   currentTurnType: undefined,
+  votingResult: undefined,
 }
 
 export const gameStateReducer = (state: GameState, event: GameStateEvent): GameState => {
@@ -37,6 +38,11 @@ export const gameStateReducer = (state: GameState, event: GameStateEvent): GameS
         ...state,
         players: state.players.map((player) =>
           player.socketId === event.payload.playerId ? { ...player, lastVote: event.payload.vote } : player)
+      }
+    case 'votingCompleted':
+      return {
+        ...state,
+        votingResult: event.payload.votingResult,
       }
   }
 }
