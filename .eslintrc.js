@@ -21,6 +21,7 @@ module.exports = {
         trailingComma: 'es5',
         singleQuote: true,
         semi: false,
+        printWidth: 100,
       },
     ],
     '@typescript-eslint/ban-ts-comment': [
