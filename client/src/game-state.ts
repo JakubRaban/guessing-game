@@ -44,5 +44,11 @@ export const gameStateReducer = (state: GameState, event: GameStateEvent): GameS
         ...state,
         votingResult: event.payload.votingResult,
       }
+    case 'newTurnStarted':
+      return {
+        ...initialGameState,
+        players: state.players.map((player) => ({ ...player, lastVote: undefined })),
+        currentTurnPlayerIndex: (state.currentTurnPlayerIndex + 1) % state.players.length,
+      }
   }
 }

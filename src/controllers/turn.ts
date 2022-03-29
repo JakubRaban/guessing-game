@@ -21,10 +21,17 @@ export default (io: Server, socket: Socket) => {
       playerId: socket.id,
       vote,
     })
+    console.log(votingResult)
     if (votingResult) {
       io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.VOTING_COMPLETED, {
         votingResult,
       })
+      if (votingResult !== 'discuss') {
+        io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TURN_COMPLETED, {})
+        setTimeout(() => {
+          io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.NEW_TURN_STARTED, {})
+        }, 3000)
+      }
     }
   }
 
@@ -37,6 +44,10 @@ export default (io: Server, socket: Socket) => {
       io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TENTATIVE_VOTE_RESULT_DETERMINED, {
         votingResult,
       })
+      io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TURN_COMPLETED, {})
+      setTimeout(() => {
+        io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.NEW_TURN_STARTED, {})
+      }, 3000)
     }
   }
 

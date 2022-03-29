@@ -20,4 +20,6 @@ export const SERVER_SENT_EVENTS = {
   VOTE_CAST: 'vote cast',
   VOTING_COMPLETED: 'voting completed',
   TENTATIVE_VOTE_RESULT_DETERMINED: 'tentative vote result determined',
+  TURN_COMPLETED: 'turn completed',
+  NEW_TURN_STARTED: 'new turn started',
 }

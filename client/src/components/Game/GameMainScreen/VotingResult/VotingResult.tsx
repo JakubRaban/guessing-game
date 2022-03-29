@@ -1,15 +1,17 @@
-import {FunctionComponent} from "react";
+import { FunctionComponent, useEffect } from 'react'
 import {useTurn, useVotingPlayers} from "../../../../hooks/game-state";
 import {Vote, YesNoVote} from "../../../../types/game";
 import {voteToText} from "../VotingPanel/VotingPanel";
 import {joinStringsWithCommasAndAnd} from "../../../../helpers";
 import {useSocket} from "../../../../hooks/useSocket";
-import {CLIENT_SENT_EVENTS} from "../../../../events/socket-event-types";
+import { CLIENT_SENT_EVENTS, SERVER_SENT_EVENTS } from '../../../../events/socket-event-types'
+import { useTimer } from 'use-timer'
 
-export const VotingResult: FunctionComponent<{ result: Vote }> = ({ result }) => {
+export const VotingResult: FunctionComponent<{ result?: Vote }> = ({ result }) => {
   const { socket } = useSocket()
   const { activePlayer, isLocalPlayerActive } = useTurn()
   const votingPlayers = useVotingPlayers()
+  const { time: nextTurnTimer, start: startNextTurnTimer } = useTimer({ initialTime: 3, timerType: 'DECREMENTAL' })
 
   const playersVotingDiscussNames = votingPlayers
     .filter((player) => player.lastVote === 'discuss')
@@ -20,6 +22,15 @@ export const VotingResult: FunctionComponent<{ result: Vote }> = ({ result }) =>
       votingResult
     })
   }
+
+  useEffect(() => {
+    socket.on(SERVER_SENT_EVENTS.TURN_COMPLETED, () => {
+      console.log('turn compl')
+      startNextTurnTimer();
+    })
+  }, [])
+
+  if (!result) return null;
 
   return result === 'discuss' ? (
     <>
@@ -43,6 +54,9 @@ export const VotingResult: FunctionComponent<{ result: Vote }> = ({ result }) =>
       )}
     </>
   ) : (
-    <p>Voting result: {voteToText[result]}</p>
+    <>
+      <p>Voting result: {voteToText[result]}</p>
+      <p>Next turn in {nextTurnTimer}</p>
+    </>
   )
 }

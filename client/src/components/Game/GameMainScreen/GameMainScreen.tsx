@@ -6,7 +6,7 @@ import {VotingPanel} from "./VotingPanel/VotingPanel";
 import {VotesList} from "./VotesList/VotesList";
 import {VotingResult} from "./VotingResult/VotingResult";
 
-import './MainScreen.scss'
+import './GameMainScreen.scss'
 
 export const GameMainScreen: FunctionComponent = () => {
   const {
@@ -45,7 +45,7 @@ export const GameMainScreen: FunctionComponent = () => {
       {isTurnTaken && (
         <>
           <VotesList />
-          {votingResult && <VotingResult result={votingResult} />}
+          <VotingResult result={votingResult} />
         </>
       )}
     </>

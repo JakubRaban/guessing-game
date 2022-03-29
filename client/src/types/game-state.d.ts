@@ -70,6 +70,10 @@ export interface VotingCompletedEvent {
   }
 }
 
+export interface NewTurnStartedEvent {
+  type: 'newTurnStarted',
+}
+
 export type GameStateEvent =
   GameStartPlayersOrderedEvent
   | QuestionAskedEvent
@@ -79,3 +83,4 @@ export type GameStateEvent =
   | PuzzleSelfAssigned
   | TurnTakenEvent
   | VotingCompletedEvent
+  | NewTurnStartedEvent
