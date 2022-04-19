@@ -1,6 +1,10 @@
 import { deletePlayer, findAllPlayersInGame } from '../repositories/player'
+import { findGameById } from '../repositories/game'
 
 export const disconnect = async (socketId: string, gameId: string) => {
-  await deletePlayer(socketId)
+  const game = (await findGameById(gameId)) as any
+  if (game.status === 'lobby') {
+    await deletePlayer(socketId)
+  }
   return findAllPlayersInGame(gameId)
 }

@@ -19,7 +19,7 @@ export const Gameplay: FunctionComponent = () => {
       modifyGameState({ type: 'puzzleSelfAssigned', payload: { socketId: socket.id } })
     })
     socket.on(SERVER_SENT_EVENTS.TURN_TAKEN, (payload) => {
-      modifyGameState({ type: 'turnTakenEvent', payload })
+      modifyGameState({ type: 'turnTaken', payload })
     })
     socket.on(SERVER_SENT_EVENTS.VOTE_CAST, (payload) => {
       modifyGameState({ type: 'voteCast', payload })
@@ -29,6 +29,9 @@ export const Gameplay: FunctionComponent = () => {
     })
     socket.on(SERVER_SENT_EVENTS.TENTATIVE_VOTE_RESULT_DETERMINED, (payload) => {
       modifyGameState({ type: 'votingCompleted', payload }) // deliberately reusing same event type
+    })
+    socket.on(SERVER_SENT_EVENTS.PUZZLE_SOLVED, (payload) => {
+      modifyGameState({ type: 'puzzleSolved', payload })
     })
     socket.on(SERVER_SENT_EVENTS.NEW_TURN_STARTED, () => {
       modifyGameState({ type: 'newTurnStarted' })

@@ -17,6 +17,7 @@ export interface Player {
   id: number
   name?: string
   socketId: string
+  standings: number
 }
 
 export interface PuzzleData {

@@ -13,6 +13,7 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.STRING(128),
         validate: { isUrl: true },
       },
+      standings: { type: DataTypes.INTEGER, defaultValue: 0 },
     },
     {
       sequelize,

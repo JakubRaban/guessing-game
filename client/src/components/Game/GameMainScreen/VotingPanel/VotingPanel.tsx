@@ -1,6 +1,7 @@
 import React, {FunctionComponent} from "react";
 import { useSocket } from "../../../../hooks/useSocket";
 import { CLIENT_SENT_EVENTS } from "../../../../events/socket-event-types";
+import {TurnType} from "../../../../types/game-state";
 
 export const voteToText = {
   yes: 'Yes',
@@ -10,7 +11,9 @@ export const voteToText = {
   '': '(waiting)'
 }
 
-export const VotingPanel: FunctionComponent = () => {
+type Vote = keyof typeof voteToText
+
+export const VotingPanel: FunctionComponent<{ turnType: TurnType }> = ({ turnType}) => {
   const { socket } = useSocket()
 
   const handleVote = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -18,10 +21,13 @@ export const VotingPanel: FunctionComponent = () => {
     socket.emit(CLIENT_SENT_EVENTS.CAST_VOTE, { vote: e.currentTarget.value })
   }
 
+  const getAvailableVotes = (): Vote[] =>
+    turnType === 'question' ? (Object.keys(voteToText) as Vote[]).filter(value => !!value) : ['yes', 'no'] as Vote[]
+
   return (
     <form>
-      {Object.entries(voteToText).filter(([value]) => !!value).map(([value, text]) => (
-        <button key={value} type="button" value={value} onClick={handleVote}>{text}</button>
+      {getAvailableVotes().map((vote) => (
+        <button key={vote} type="button" value={vote} onClick={handleVote}>{voteToText[vote]}</button>
       ))}
     </form>
   )

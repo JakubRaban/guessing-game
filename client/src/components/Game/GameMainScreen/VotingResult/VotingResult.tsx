@@ -1,15 +1,18 @@
 import { FunctionComponent, useEffect } from 'react'
+import { useTimer } from 'use-timer'
 import {useTurn, useVotingPlayers} from "../../../../hooks/game-state";
-import {Vote, YesNoVote} from "../../../../types/game";
+import {YesNoVote} from "../../../../types/game";
 import {voteToText} from "../VotingPanel/VotingPanel";
 import {joinStringsWithCommasAndAnd} from "../../../../helpers";
 import {useSocket} from "../../../../hooks/useSocket";
 import { CLIENT_SENT_EVENTS, SERVER_SENT_EVENTS } from '../../../../events/socket-event-types'
-import { useTimer } from 'use-timer'
 
-export const VotingResult: FunctionComponent<{ result?: Vote }> = ({ result }) => {
+export const VotingResult: FunctionComponent = () => {
   const { socket } = useSocket()
-  const { activePlayer, isLocalPlayerActive } = useTurn()
+  const {
+    activePlayer,
+    turn: { type: turnType, votingResult }
+  } = useTurn()
   const votingPlayers = useVotingPlayers()
   const { time: nextTurnTimer, start: startNextTurnTimer } = useTimer({ initialTime: 3, timerType: 'DECREMENTAL' })
 
@@ -17,22 +20,25 @@ export const VotingResult: FunctionComponent<{ result?: Vote }> = ({ result }) =
     .filter((player) => player.lastVote === 'discuss')
     .map((player) => player.name!)
 
-  const handleAnswerSelected = (votingResult: YesNoVote) => () => {
+  const handleAnswerSelected = (result: YesNoVote) => () => {
     socket.emit(CLIENT_SENT_EVENTS.DETERMINE_TENTATIVE_VOTE_RESULT, {
-      votingResult
+      votingResult: result
     })
   }
 
   useEffect(() => {
-    socket.on(SERVER_SENT_EVENTS.TURN_COMPLETED, () => {
-      console.log('turn compl')
+    const turnCompletedListener =  () => {
       startNextTurnTimer();
-    })
+    }
+    socket.on(SERVER_SENT_EVENTS.TURN_COMPLETED, turnCompletedListener)
+    return () => {
+      socket.off(SERVER_SENT_EVENTS.TURN_COMPLETED, turnCompletedListener)
+    }
   }, [])
 
-  if (!result) return null;
+  if (!votingResult) return null;
 
-  return result === 'discuss' ? (
+  return votingResult === 'discuss' ? (
     <>
       <p>
         {playersVotingDiscussNames.length
@@ -40,7 +46,7 @@ export const VotingResult: FunctionComponent<{ result?: Vote }> = ({ result }) =
           : 'The vote is not unanimous'
         }
       </p>
-      {isLocalPlayerActive ? (
+      {activePlayer.isLocal ? (
         <>
           <p>What do you want to do?</p>
           <button>Open chat to discuss</button><br />
@@ -55,7 +61,9 @@ export const VotingResult: FunctionComponent<{ result?: Vote }> = ({ result }) =
     </>
   ) : (
     <>
-      <p>Voting result: {voteToText[result]}</p>
+      {activePlayer.hasGuessed && <p>{activePlayer.isLocal ? 'You' : activePlayer.name} guessed correctly!</p>}
+      {activePlayer.hasFailedToGuess && <p>{activePlayer.isLocal ? 'Your' : `${activePlayer.name}'s`} guess was incorrect</p>}
+      {turnType === 'question' && <p>Voting result: {voteToText[votingResult]}</p>}
       <p>Next turn in {nextTurnTimer}</p>
     </>
   )

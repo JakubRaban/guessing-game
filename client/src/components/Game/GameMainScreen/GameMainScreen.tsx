@@ -10,16 +10,20 @@ import './GameMainScreen.scss'
 
 export const GameMainScreen: FunctionComponent = () => {
   const {
-    activePlayer,
-    isLocalPlayerActive,
+    activePlayer: {
+      name: activePlayerName,
+      isLocal: isLocalPlayerActive,
+      hasGuessed: hasActivePlayerGuessed,
+      hasGuessedImmediately: hasActivePlayerGuessedImmediately,
+    },
     isTurnTaken,
     turn: { type: turnType, text: turnText, votingResult }
   } = useTurn()
 
   const activePlayerYetToAct = isLocalPlayerActive && !isTurnTaken
-  const activePlayerAwaitingVotes = isLocalPlayerActive && isTurnTaken
+  const activePlayerAwaitingVotes = isLocalPlayerActive && isTurnTaken && !hasActivePlayerGuessed
   const nonActivePlayerAwaitingAction = !isLocalPlayerActive && !isTurnTaken
-  const nonActivePlayerVoting = !isLocalPlayerActive && isTurnTaken
+  const nonActivePlayerVoting = !isLocalPlayerActive && isTurnTaken && !hasActivePlayerGuessed
 
   return (
     <>
@@ -33,19 +37,19 @@ export const GameMainScreen: FunctionComponent = () => {
         </>
       )}
       {nonActivePlayerAwaitingAction && (
-        <p>Waiting for {activePlayer.name}'s move</p>
+        <p>Waiting for {activePlayerName}'s move</p>
       )}
       {nonActivePlayerVoting && (
         <>
-          <p>{activePlayer.name} {turnType === 'question' ? 'asks' : 'tries to guess'}:</p>
+          <p>{activePlayerName} {turnType === 'question' ? 'asks' : 'tries to guess'}:</p>
           <p>{turnType === 'answer' && 'Am I '}{turnText}</p>
-          {!votingResult && <VotingPanel/>}
+          {!votingResult && <VotingPanel turnType={turnType!} />}
         </>
       )}
       {isTurnTaken && (
         <>
-          <VotesList />
-          <VotingResult result={votingResult} />
+          {!hasActivePlayerGuessedImmediately && <VotesList/>}
+          <VotingResult />
         </>
       )}
     </>

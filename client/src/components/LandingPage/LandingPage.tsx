@@ -11,7 +11,7 @@ export const LandingPage: FunctionComponent = () => (
         Edit <code>src/LandingPage.tsx</code> and save to reload.
       </p>
       <Link to="/new-game">
-        Learn React
+        Start new game
       </Link>
     </header>
   </div>

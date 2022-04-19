@@ -1,4 +1,4 @@
-import {Player, PuzzledPlayer, Vote} from "./game";
+import {Player, PuzzleData, PuzzledPlayer, Vote} from "./game";
 
 export type TurnType = 'question' | 'answer'
 
@@ -8,6 +8,7 @@ export interface GameState {
   currentTurnText?: string
   currentTurnType?: TurnType
   votingResult?: Vote
+  immediatelyGuessed?: boolean
 }
 
 export interface GameStartPlayersOrderedEvent {
@@ -48,10 +49,11 @@ export interface PuzzleSelfAssigned {
 }
 
 export interface TurnTakenEvent {
-  type: 'turnTakenEvent',
+  type: 'turnTaken',
   payload: {
     turnType: TurnType
     text: string
+    guessed: boolean
   }
 }
 
@@ -64,14 +66,28 @@ export interface VoteCastEvent {
 }
 
 export interface VotingCompletedEvent {
-  type: 'votingCompleted',
+  type: 'votingCompleted'
   payload: {
     votingResult: Vote
+    immediate?: boolean
   }
 }
 
+export interface PuzzleSolved {
+  type: 'puzzleSolved'
+  payload: {
+    puzzleData: PuzzleData
+    standings: number
+    playerId: string
+  }
+}
+
+export interface TurnCompletedEvent {
+  type: 'turnCompleted'
+}
+
 export interface NewTurnStartedEvent {
-  type: 'newTurnStarted',
+  type: 'newTurnStarted'
 }
 
 export type GameStateEvent =
@@ -84,3 +100,4 @@ export type GameStateEvent =
   | TurnTakenEvent
   | VotingCompletedEvent
   | NewTurnStartedEvent
+  | PuzzleSolved
