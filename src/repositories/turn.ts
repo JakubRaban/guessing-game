@@ -18,9 +18,7 @@ export const findCurrentTurnInGame = (gameId: string) => {
         where: { GameUrlId: gameId },
       },
     ],
-    where: {
-      voteResult: null,
-    },
+    order: [['createdAt', 'DESC']],
   })
 }
 
@@ -30,4 +28,12 @@ export const createVote = (vote: Vote, turnId: string, playerId: string) => {
 
 export const updateVote = (voteId: number, vote: Vote) => {
   return Vote.update({ vote }, { where: { id: voteId } })
+}
+
+export const getAllVotesInTurn = (turnId: string): Promise<any[]> => {
+  return Vote.findAll({ where: { TurnId: turnId } })
+}
+
+export const updateVotingResult = (turnId: string, votingResult: Vote) => {
+  return Turn.update({ votingResult }, { where: { id: turnId } })
 }

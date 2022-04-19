@@ -1,7 +1,7 @@
 import sequelize from '../models'
 import { PuzzleData } from '../../client/src/types/game'
 
-const { Player } = sequelize.models
+const { Player, Game } = sequelize.models
 
 export const createPlayer = (gameId: string, socketId: string) => {
   return Player.create({ socketId, GameUrlId: gameId })
@@ -20,6 +20,22 @@ export const findAllPlayersInGameByOrderOfPlaying = (gameId: string) => {
     where: { GameUrlId: gameId },
     order: ['orderOfPlaying'],
   })
+}
+
+export const setStandingsForPlayer = async (socketId: string) => {
+  const player = (await findPlayerById(socketId)) as any
+  const game = (await Game.findOne({ where: { urlId: player.GameUrlId }, include: Player })) as any
+  const currentMaxStandings: number = await Player.max('standings', {
+    where: { GameUrlId: player.GameUrlId },
+  })
+  const standings = currentMaxStandings + 1
+  player.standings = standings
+
+  if (standings === game.Players.length) {
+    game.status = 'finished'
+  }
+  await Promise.all([player.save(), game.save()])
+  return standings
 }
 
 export const updatePlayerName = (socketId: string, name: string) => {

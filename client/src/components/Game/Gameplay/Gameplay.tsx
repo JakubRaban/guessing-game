@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useEffect, useReducer} from "react";
 import {CLIENT_SENT_EVENTS, SERVER_SENT_EVENTS} from "../../../events/socket-event-types";
-import {GameMainScreen} from "../MainScreen/GameMainScreen";
+import {GameMainScreen} from "../GameMainScreen/GameMainScreen";
 import {CharacterAssignment} from "../CharacterAssignment/CharacterAssignment";
 import {useSocket} from "../../../hooks/useSocket";
 import {gameStateReducer, initialGameState} from "../../../game-state";
@@ -19,10 +19,22 @@ export const Gameplay: FunctionComponent = () => {
       modifyGameState({ type: 'puzzleSelfAssigned', payload: { socketId: socket.id } })
     })
     socket.on(SERVER_SENT_EVENTS.TURN_TAKEN, (payload) => {
-      modifyGameState({ type: 'turnTakenEvent', payload })
+      modifyGameState({ type: 'turnTaken', payload })
     })
     socket.on(SERVER_SENT_EVENTS.VOTE_CAST, (payload) => {
       modifyGameState({ type: 'voteCast', payload })
+    })
+    socket.on(SERVER_SENT_EVENTS.VOTING_COMPLETED, (payload) => {
+      modifyGameState({ type: 'votingCompleted', payload })
+    })
+    socket.on(SERVER_SENT_EVENTS.TENTATIVE_VOTE_RESULT_DETERMINED, (payload) => {
+      modifyGameState({ type: 'votingCompleted', payload }) // deliberately reusing same event type
+    })
+    socket.on(SERVER_SENT_EVENTS.PUZZLE_SOLVED, (payload) => {
+      modifyGameState({ type: 'puzzleSolved', payload })
+    })
+    socket.on(SERVER_SENT_EVENTS.NEW_TURN_STARTED, () => {
+      modifyGameState({ type: 'newTurnStarted' })
     })
 
     socket.emit(CLIENT_SENT_EVENTS.GAME_START_GET_ORDERED_PLAYERS, (players: PuzzledPlayer[]) => {

@@ -13,9 +13,11 @@ export const InGamePlayersList: FunctionComponent = () => {
       {players.map((player) => (
         <li
           key={player.id}
-          className={cx({ playing: player === activePlayer })}
+          className={cx({ active: player.socketId === activePlayer.socketId })}
         >
-          {player.name} {player === localPlayer ? <>(you)</> : <>as {getAssignedPuzzleWithLinkToInfoPage(player)}</>}
+          {player.name}
+          {player === localPlayer ? ' (you) ' : ' '}
+          {(player !== localPlayer || player.standings !== 0) && <>as {getAssignedPuzzleWithLinkToInfoPage(player)}</>}
         </li>
       ))}
     </ul>

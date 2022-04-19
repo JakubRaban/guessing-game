@@ -20,6 +20,9 @@ export const Game: FunctionComponent<{ game: GameType }> = ({ game: fetchedGame 
     socket.on(SERVER_SENT_EVENTS.GAME_STARTED, () => {
       setGame((game) => ({ ...game, status: 'playing' }))
     })
+    socket.on(SERVER_SENT_EVENTS.GAME_COMPLETED, () => {
+      setGame((game) => ({ ...game, status: 'finished' }))
+    })
   }, [])
 
   switch (game.status) {

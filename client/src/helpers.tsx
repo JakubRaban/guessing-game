@@ -12,3 +12,9 @@ export const getAssignedPuzzleWithLinkToInfoPage = (player: PuzzledPlayer) =>
   player.puzzleInfoPage
     ? <a href={player.puzzleInfoPage} target="_blank" rel="noopener noreferrer">{player.assignedPuzzle}</a>
     : <>{player.assignedPuzzle}</>
+
+export const joinStringsWithCommasAndAnd = (strings: string[]): string => {
+  if (!strings.length) return ''
+  if (strings.length === 1) return strings[0]
+  return `${strings.slice(0, strings.length - 1).join(', ')} and ${strings[strings.length - 1]}`
+}

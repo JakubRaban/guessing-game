@@ -6,6 +6,7 @@ export const CLIENT_SENT_EVENTS = {
   ASSIGN_PUZZLE: 'assign puzzle',
   TAKE_TURN: 'take turn',
   CAST_VOTE: 'cast vote',
+  DETERMINE_TENTATIVE_VOTE_RESULT: 'determine tentative vote result',
 }
 
 export const SERVER_SENT_EVENTS = {
@@ -16,5 +17,11 @@ export const SERVER_SENT_EVENTS = {
   PUZZLE_ASSIGNED: 'puzzle assigned',
   PUZZLE_SELF_ASSIGNED: 'puzzle self assigned',
   TURN_TAKEN: 'turn taken',
-  VOTE_CAST: 'vote cast'
+  PUZZLE_SOLVED: 'puzzle solved',
+  VOTE_CAST: 'vote cast',
+  VOTING_COMPLETED: 'voting completed',
+  TENTATIVE_VOTE_RESULT_DETERMINED: 'tentative vote result determined',
+  TURN_COMPLETED: 'turn completed',
+  NEW_TURN_STARTED: 'new turn started',
+  GAME_COMPLETED: 'game completed'
 }

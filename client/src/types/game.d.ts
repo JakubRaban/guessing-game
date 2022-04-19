@@ -17,9 +17,8 @@ export interface Player {
   id: number
   name?: string
   socketId: string
+  standings: number
 }
-
-export type Vote = 'yes' | 'no' | '?' | 'discuss'
 
 export interface PuzzleData {
   assignedPuzzle: string
@@ -28,6 +27,13 @@ export interface PuzzleData {
 
 export type PuzzledPlayer = Player & Partial<PuzzleData> & {
   lastVote?: Vote
+}
+
+export type YesNoVote = 'yes' | 'no'
+export type Vote = YesNoVote | '?' | 'discuss'
+
+export type VotesCount = {
+  [vote in Vote]: number
 }
 
 export interface TurnData {

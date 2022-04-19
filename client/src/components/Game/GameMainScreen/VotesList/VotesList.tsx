@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from "react";
-import {useVotes} from "../../../hooks/game-state";
-import {voteToText} from "../VotingPanel/VotingPanel";
+import { useVotes } from "../../../../hooks/game-state";
+import { voteToText } from "../VotingPanel/VotingPanel";
 
 export const VotesList: FunctionComponent = () => {
-  const { votes, allPlayersVoted } = useVotes()
+  const { votes } = useVotes()
 
   return (
     <>

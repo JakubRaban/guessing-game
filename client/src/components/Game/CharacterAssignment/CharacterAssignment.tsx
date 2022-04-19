@@ -46,7 +46,7 @@ export const CharacterAssignment: FunctionComponent = () => {
         </thead>
         <tbody>
           {Array.from(assignments).map(([assigningPlayer, playerBeingAssigned]) => (
-            <tr>
+            <tr key={assigningPlayer.socketId}>
               <td>{playerBeingAssigned.name}{playerBeingAssigned === currentPlayer ? ' (you)' : ''} (picked by {assigningPlayer.name})</td>
               <td>
                 {!playerBeingAssigned.assignedPuzzle
