@@ -3,7 +3,7 @@ An implementation of a party game in which players stick post-its with a name of
 
 ## Features
 The following features are expected to be implemented for an MVP:
-1. ✅ User creates a game with an unique URL which can be joined by other players by just pasting it to their address bar
+1. ✅ User creates a game with a unique URL which can be joined by other players by just pasting it to their address bar
 2. The creator of the game sets the settings of the game:
   - (❌ To be removed and set to a constant, rational value, like 10) Max number of players able to join the game
   - When should the game finish:
