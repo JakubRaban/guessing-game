@@ -27,7 +27,6 @@ const completeTurnAndBeginNext = ({ io, gameId, isGameFinished }: CompleteTurnAn
 
 export default (io: Server, socket: Socket) => {
   const takeTurnController = async (turnData: TakeTurnEventPayload) => {
-    console.log('take turn')
     const { guessed, standings, player, isGameFinished } = await takeTurn(socket.id, turnData)
     io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TURN_TAKEN, {
       ...turnData,
@@ -51,7 +50,6 @@ export default (io: Server, socket: Socket) => {
   }
 
   const castVoteController = async ({ vote }: CastVoteEventPayload) => {
-    console.log('cast vote')
     const { votingResult, hasPlayerWon, standings, player, isGameFinished } = await castVote(
       socket.data.gameId,
       socket.id,
@@ -84,7 +82,6 @@ export default (io: Server, socket: Socket) => {
   const determineTentativeVotingResultController = async ({
     votingResult,
   }: DetermineTentativeVotingResultEvent) => {
-    console.log('determine tentative voting result')
     const { error } = await determineTentativeVotingResult(socket.data.gameId, votingResult)
     if (!error) {
       io.to(socket.data.gameId).emit(SERVER_SENT_EVENTS.TENTATIVE_VOTE_RESULT_DETERMINED, {
