@@ -15,7 +15,7 @@ export const GameEntrypoint: FunctionComponent = () => {
       // Game was passed from the "NewGame" component
       setGame(passedNewGame)
     } else {
-      fetchJson(`http://localhost:9000/games/${gameId}`).then((res) => {
+      fetchJson(`/api/games/${gameId}`).then((res) => {
         setGame(res)
       })
     }
