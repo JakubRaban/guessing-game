@@ -4,6 +4,7 @@ import {Lobby} from "./Lobby/Lobby";
 import {SERVER_SENT_EVENTS} from "../../events/socket-event-types";
 import {Gameplay} from "./Gameplay/Gameplay";
 import {useSocket} from "../../hooks/useSocket";
+import {GameSummary} from "./GameSummary/GameSummary";
 
 export const Game: FunctionComponent<{ game: GameType }> = ({ game: fetchedGame }) => {
   const { socket } = useSocket()
@@ -31,6 +32,6 @@ export const Game: FunctionComponent<{ game: GameType }> = ({ game: fetchedGame 
     case 'playing':
       return <Gameplay />
     case 'finished':
-      return <p>Game finished</p>
+      return <GameSummary />
   }
 }

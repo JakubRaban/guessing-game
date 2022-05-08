@@ -36,7 +36,7 @@ app.use((err: any, req: Request, res: Response) => {
 })
 
 sequelize.authenticate().then(() => {
-  sequelize.sync({ force: true }).then(() => console.log('DB ready'))
+  sequelize.sync().then(() => console.log('DB ready'))
 })
 
 export default app

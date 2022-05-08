@@ -1,9 +1,5 @@
-import { findGameById, updateGameStatus } from '../repositories/game'
-import {
-  createPlayer,
-  findAllPlayersInGame,
-  updateOrderOfPlaying,
-} from '../repositories/player'
+import { findGameById, findGameByIdWithTurnsData, updateGameStatus } from '../repositories/game'
+import { createPlayer, findAllPlayersInGame, updateOrderOfPlaying } from '../repositories/player'
 import { shuffleArray } from '../helpers'
 
 export const joinGame = async (gameId: string, socketId: string) => {
@@ -28,4 +24,8 @@ export const startGame = async (gameId: string) => {
     players,
     shuffleArray([...Array(players.length)].map((_, index) => index))
   )
+}
+
+export const getGameSummary = async (gameId: string) => {
+  return findGameByIdWithTurnsData(gameId)
 }

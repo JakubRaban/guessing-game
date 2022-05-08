@@ -7,6 +7,7 @@ export const CLIENT_SENT_EVENTS = {
   TAKE_TURN: 'take turn',
   CAST_VOTE: 'cast vote',
   DETERMINE_TENTATIVE_VOTE_RESULT: 'determine tentative vote result',
+  GET_GAME_SUMMARY: 'get game summary',
 }
 
 export const SERVER_SENT_EVENTS = {
@@ -23,5 +24,6 @@ export const SERVER_SENT_EVENTS = {
   TENTATIVE_VOTE_RESULT_DETERMINED: 'tentative vote result determined',
   TURN_COMPLETED: 'turn completed',
   NEW_TURN_STARTED: 'new turn started',
-  GAME_COMPLETED: 'game completed'
+  GAME_COMPLETED: 'game completed',
+  GAME_SUMMARY: 'game summary'
 }
