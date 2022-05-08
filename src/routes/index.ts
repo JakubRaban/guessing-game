@@ -1,17 +1,13 @@
 import { Router } from 'express'
-import gamesRouter from './games'
-import { findGameById } from '../repositories/game';
+import apiRouter from './api'
+import path from 'path'
 
 const router = Router()
 
-router.use('/games', gamesRouter)
+router.use('/api', apiRouter)
 
 router.get('/', (req, res) => {
-  res.send('Z kopyta kulig rwiee')
-})
-
-router.get('/test', async (req, res) => {
-  res.send(await findGameById('zgs-qfp-jcb'))
+  res.sendFile(path.join(process.cwd(), 'src/public/index.html'))
 })
 
 export default router

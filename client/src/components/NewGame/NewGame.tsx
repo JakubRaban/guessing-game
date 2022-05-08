@@ -10,7 +10,7 @@ export const NewGame: FunctionComponent = () => {
   const handleCreateGame = (e: React.FormEvent) => {
     e.preventDefault()
     setIsCreatingNewGame(true)
-    fetchJson('http://localhost:9000/games', {
+    fetchJson('/api/games', {
       body: JSON.stringify({ maxPlayers }),
       method: 'POST'
     })
