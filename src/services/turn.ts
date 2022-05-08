@@ -13,12 +13,14 @@ export const takeTurn = async (playerId: string, turnData: TurnData) => {
   let standings
   const player = (await findPlayerById(playerId)) as any
   const allPlayers = (await findAllPlayersInGame(player.GameUrlId)) as any
-  await createTurn(player.id, turnData)
+  const turn = (await createTurn(player.id, turnData)) as any
   const puzzleGuessed =
     turnData.turnType === 'answer' &&
     turnData.text.toLocaleLowerCase() === player.assignedPuzzle.toLocaleLowerCase()
   if (puzzleGuessed) {
     standings = await setStandingsForPlayer(player.socketId)
+    turn.votingResult = 'yes'
+    turn.save()
   }
   return {
     guessed: puzzleGuessed,
