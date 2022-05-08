@@ -13,7 +13,6 @@ export const Game: FunctionComponent<{ game: GameType }> = ({ game: fetchedGame 
   useEffect(() => {
     socket.connect()
     return () => {
-      console.log('???')
       socket.disconnect()
     }
   }, [])
