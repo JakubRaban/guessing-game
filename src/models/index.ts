@@ -7,11 +7,21 @@ import Player from './player'
 import Turn from './turn'
 import GameOptions from './game-options'
 import Vote from './vote'
+import { isProduction } from '../helpers/env'
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite',
-})
+const sequelize = isProduction()
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
+    })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: './database.sqlite',
+    })
 
 const modelDefiners: ModelDefiner[] = [Game, Player, Turn, Vote, GameOptions]
 

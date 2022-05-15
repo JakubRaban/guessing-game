@@ -6,8 +6,8 @@ const router = Router()
 
 router.use('/api', apiRouter)
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'src/public/index.html'))
+router.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'))
 })
 
 export default router

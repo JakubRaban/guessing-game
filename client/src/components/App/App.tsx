@@ -5,9 +5,10 @@ import {NewGame} from "../NewGame/NewGame";
 import {GameEntrypoint} from "../Game/GameEntrypoint/GameEntrypoint";
 import {SocketIOContext} from "../../contexts/SocketIOContext";
 import {io} from "socket.io-client";
+import config from "../../../config";
 
 export const App: FunctionComponent = () => (
-  <SocketIOContext.Provider value={{ socket: io('http://localhost:9000',
+  <SocketIOContext.Provider value={{ socket: io(config.SERVER_URL,
       { autoConnect: false, closeOnBeforeunload: true })
   }}>
     <BrowserRouter>

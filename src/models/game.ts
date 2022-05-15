@@ -1,5 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
-import { generateGameId } from '../helpers'
+import { generateGameId } from '../helpers/algorithms'
 
 class Game extends Model {}
 
