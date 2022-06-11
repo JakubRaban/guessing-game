@@ -1,0 +1,22 @@
+button.menu-button {
+  display: block;
+  min-width: 40vh;
+  font-size: 1.125em;
+  padding: 0.625em 1em;
+  border-radius: 1.25em;
+  font-weight: 600;
+  background-color: transparent;
+  outline: none;
+  border: 0.125em solid black;
+  transition: background-color linear 0.2s;
+  cursor: pointer;
+
+  & + button.menu-button {
+    margin-top: 0.5em;
+  }
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+}

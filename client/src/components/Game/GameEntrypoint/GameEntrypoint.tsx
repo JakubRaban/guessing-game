@@ -1,7 +1,7 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
 import {useLocation, useParams} from "react-router";
 import {Game as GameType} from "../../../types/game";
-import {fetchJson} from "../../../helpers";
+import {fetchJson} from "../../../helpers/helpers";
 import {Game} from "../Game";
 
 export const GameEntrypoint: FunctionComponent = () => {

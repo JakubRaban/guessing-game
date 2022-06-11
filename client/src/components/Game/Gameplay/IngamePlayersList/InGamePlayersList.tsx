@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from "react";
 import cx from "classnames";
-import {getAssignedPuzzleWithLinkToInfoPage} from "../../../../helpers";
+import {getAssignedPuzzleWithLinkToInfoPage} from "../../../../helpers/helpers";
 import {usePlayer, usePlayers, useTurn} from "../../../../hooks/game-state";
 
 export const InGamePlayersList: FunctionComponent = () => {

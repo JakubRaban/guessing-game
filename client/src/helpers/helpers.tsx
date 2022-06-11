@@ -1,4 +1,4 @@
-import {PuzzledPlayer} from "./types/game";
+import {PuzzledPlayer} from "../types/game";
 import React from "react";
 
 export const fetchJson = (input: RequestInfo, init?: RequestInit | undefined): Promise<any> =>

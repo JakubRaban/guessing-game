@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {fetchJson} from "../../helpers";
+import {fetchJson} from "../../helpers/helpers";
 
 export const NewGame: FunctionComponent = () => {
   const [maxPlayers, setMaxPlayers] = useState(2)
