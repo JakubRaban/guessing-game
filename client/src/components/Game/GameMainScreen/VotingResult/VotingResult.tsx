@@ -3,7 +3,7 @@ import { useTimer } from 'use-timer'
 import {useTurn, useVotingPlayers} from "../../../../hooks/game-state";
 import {YesNoVote} from "../../../../types/game";
 import {voteToText} from "../VotingPanel/VotingPanel";
-import {joinStringsWithCommasAndAnd} from "../../../../helpers";
+import {joinStringsWithCommasAndAnd} from "../../../../helpers/helpers";
 import {useSocket} from "../../../../hooks/useSocket";
 import { CLIENT_SENT_EVENTS, SERVER_SENT_EVENTS } from '../../../../events/socket-event-types'
 

@@ -1,4 +1,4 @@
-import {isProduction} from "../src/helpers/env";
+import {isProduction} from "./helpers/env";
 
 const devConfig = {
   SERVER_URL: 'http://localhost:9000'

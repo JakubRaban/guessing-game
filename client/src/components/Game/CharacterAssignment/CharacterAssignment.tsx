@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useState} from "react";
-import {getAssignedPuzzleWithLinkToInfoPage} from "../../../helpers";
+import {getAssignedPuzzleWithLinkToInfoPage} from "../../../helpers/helpers";
 import {CLIENT_SENT_EVENTS} from "../../../events/socket-event-types";
 import {useSocket} from "../../../hooks/useSocket";
 import {useAssignments, usePlayer} from "../../../hooks/game-state";

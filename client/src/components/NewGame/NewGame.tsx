@@ -1,42 +1,49 @@
-import React, {FunctionComponent, useState} from "react";
+import React, {FunctionComponent} from "react";
 import {useNavigate} from "react-router-dom";
-import {fetchJson} from "../../helpers";
+import {fetchJson} from "../../helpers/helpers";
+import {Header} from "../lib/Header/Header";
+import {useForm} from "react-hook-form";
+
+import './NewGame.scss';
+
+type FormData = {
+  maxPlayers: number;
+  isPublic: boolean;
+}
+
+const defaultValues: FormData = {
+  maxPlayers: 4,
+  isPublic: false,
+}
 
 export const NewGame: FunctionComponent = () => {
-  const [maxPlayers, setMaxPlayers] = useState(2)
-  const [isCreatingNewGame, setIsCreatingNewGame] = useState(false)
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ defaultValues });
   const navigate = useNavigate();
 
-  const handleCreateGame = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsCreatingNewGame(true)
-    fetchJson('/api/games', {
-      body: JSON.stringify({ maxPlayers }),
+  const createGame = (data: FormData) => {
+    return fetchJson('/api/games', {
+      body: JSON.stringify(data),
       method: 'POST'
     })
       .then((res) => navigate(`/game/${res.urlId}`, { state: { game: res } }))
   }
 
   return (
-    <>
-      <h1>New game</h1>
-      <form onSubmit={handleCreateGame}>
-        <label>
-          Players limit
-          <br/>
-          <input
-            name="maxPlayers"
-            type="number"
-            value={maxPlayers}
-            onChange={(e) => setMaxPlayers(parseInt(e.target.value))}
-            min="2"
-            max="10"
-          />
-        </label>
-        <br/>
-        <button type="submit">Create new game</button>
+    <div className="new-game-page">
+      <Header>Create new game</Header>
+      <form onSubmit={handleSubmit(createGame)}>
+        <div>
+          <label htmlFor="maxPlayers">Players limit</label>
+          <input type="number" {...register('maxPlayers', { min: 2, max: 12 })} />
+        </div>
+        <div>
+          <label htmlFor="isPublic">Make public</label>
+          <input type="checkbox" {...register('isPublic')} />
+        </div>
       </form>
-      {isCreatingNewGame && <p>Creating new game...</p>}
-    </>
+      <br />
+      <button onClick={handleSubmit(createGame)}>Create game</button>
+      {isSubmitting && <p>Creating new game...</p>}
+    </div>
   )
 }
